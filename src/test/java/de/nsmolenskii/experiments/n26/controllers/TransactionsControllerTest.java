@@ -1,6 +1,7 @@
 package de.nsmolenskii.experiments.n26.controllers;
 
 import de.nsmolenskii.experiments.n26.domains.Transaction;
+import de.nsmolenskii.experiments.n26.exceptions.InvalidTimestampException;
 import de.nsmolenskii.experiments.n26.services.MetricsService;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static de.nsmolenskii.experiments.n26.utils.validation.WithinLastLongValidator.NOW;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,7 +51,7 @@ public class TransactionsControllerTest {
 
     @Test
     public void shouldValidateRequest() throws Exception {
-        this.mvc.perform(post("/api/transactions")
+        mvc.perform(post("/api/transactions")
                 .contentType("application/json")
                 //language=JSON
                 .content("{}"))
@@ -56,6 +59,18 @@ public class TransactionsControllerTest {
                 .andExpect(content().bytes(new byte[0]));
 
         verifyZeroInteractions(metricsService);
+    }
 
+    @Test
+    public void shouldHandleInvalidTimestampException() throws Exception {
+        doThrow(new InvalidTimestampException(""))
+                .when(metricsService).register(any(Transaction.class));
+
+        mvc.perform(post("/api/transactions")
+                .contentType("application/json")
+                //language=JSON
+                .content("{\"amount\": 12.3,\"timestamp\": 1478192204000}"))
+                .andExpect(status().isNoContent())
+                .andExpect(content().bytes(new byte[0]));
     }
 }

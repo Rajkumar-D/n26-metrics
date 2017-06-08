@@ -16,16 +16,18 @@ public interface TransactionStatistic {
 
     double getSum();
 
-    double getAvg();
-
     double getMax();
 
     double getMin();
 
+    @Value.Derived
+    default double getAvg() {
+        return getCount() > 0 ? getSum() / getCount() : Double.NaN;
+    }
+
     TransactionStatistic ZERO = TransactionStatistic.builder()
             .count(0)
             .sum(0.0)
-            .avg(Double.NaN)
             .max(Double.NaN)
             .min(Double.NaN)
             .build();
@@ -34,5 +36,27 @@ public interface TransactionStatistic {
         return new TransactionStatisticBuilder();
     }
 
+    default TransactionStatistic register(double amount) {
+        return merge(TransactionStatistic.builder()
+                .count(1)
+                .sum(amount)
+                .min(amount)
+                .max(amount)
+                .build());
+    }
 
+    default TransactionStatistic merge(TransactionStatistic that) {
+        if (this.equals(ZERO)) {
+            return that;
+        }
+        if (that.equals(ZERO)) {
+            return this;
+        }
+        return TransactionStatistic.builder()
+                .count(this.getCount() + that.getCount())
+                .sum(this.getSum() + that.getSum())
+                .min(Math.min(this.getMin(), that.getMin()))
+                .max(Math.max(this.getMax(), that.getMax()))
+                .build();
+    }
 }
