@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.util.function.Supplier;
 
 public class WithinLastLongValidator implements ConstraintValidator<WithinLast, Long> {
+
     @VisibleForTesting
     public static Supplier<Long> NOW = System::currentTimeMillis;
 
@@ -23,6 +24,5 @@ public class WithinLastLongValidator implements ConstraintValidator<WithinLast, 
     public boolean isValid(@Nullable Long value, ConstraintValidatorContext context) {
         Duration age = Duration.of(annotation.duration(), annotation.unit());
         return value == null || NOW.get() - value <= age.toMillis();
-
     }
 }

@@ -16,9 +16,12 @@ import javax.validation.Valid;
 @RequestMapping("/api/transactions")
 public class TransactionsController {
 
+    private final MetricsService metricsService;
 
     @Autowired
-    private MetricsService metricsService;
+    public TransactionsController(MetricsService metricsService) {
+        this.metricsService = metricsService;
+    }
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)

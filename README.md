@@ -32,7 +32,7 @@ HTTP/1.1 201 Created
 
 #### Error response sample - timestamp is older than 60 seconds
 ```http
-HTTP/1.1 409 Conflict
+HTTP/1.1 204 No Content
 ```
 
 ### Statistics

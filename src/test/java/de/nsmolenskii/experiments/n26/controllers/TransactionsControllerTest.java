@@ -54,7 +54,7 @@ public class TransactionsControllerTest {
         mvc.perform(post("/api/transactions")
                 .contentType("application/json")
                 .content("{\"timestamp\": 0}"))
-                .andExpect(status().isConflict())
+                .andExpect(status().isNoContent())
                 .andExpect(content().bytes(new byte[0]));
 
         verifyZeroInteractions(metricsService);
@@ -68,7 +68,7 @@ public class TransactionsControllerTest {
         mvc.perform(post("/api/transactions")
                 .contentType("application/json")
                 .content("{\"amount\": 12.3,\"timestamp\": 1478192204000}"))
-                .andExpect(status().isConflict())
+                .andExpect(status().isNoContent())
                 .andExpect(content().bytes(new byte[0]));
     }
 }

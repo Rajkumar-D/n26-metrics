@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/statistics")
 public class TransactionStatisticsController {
 
+    private final MetricsService metricsService;
+
     @Autowired
-    private MetricsService metricsService;
+    public TransactionStatisticsController(MetricsService metricsService) {
+        this.metricsService = metricsService;
+    }
 
     @GetMapping(produces = "application/json")
-    public TransactionStatistic getTransactionStatistics(){
+    public TransactionStatistic getTransactionStatistics() {
         return metricsService.getTransactionStatistics();
     }
 }
