@@ -1,5 +1,6 @@
 package de.nsmolenskii.experiments.n26.controllers;
 
+import de.nsmolenskii.experiments.n26.exceptions.InvalidTimestampException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,7 +13,11 @@ public class DefaultControllerAdvice {
 
     @ResponseStatus(CONFLICT)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public void handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
-        System.out.println(e);
+    public void handleMethodArgumentNotValidException() {
+    }
+
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(InvalidTimestampException.class)
+    public void handleInvalidTimestampException() {
     }
 }

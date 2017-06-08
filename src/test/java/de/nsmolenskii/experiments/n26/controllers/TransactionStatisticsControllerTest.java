@@ -34,7 +34,6 @@ public class TransactionStatisticsControllerTest {
         when(metricsService.getTransactionStatistics()).thenReturn(ImmutableTransactionStatistic.builder()
                 .count(3)
                 .sum(43.8)
-                .avg(14.6)
                 .max(42.5)
                 .min(0.3)
                 .build());
